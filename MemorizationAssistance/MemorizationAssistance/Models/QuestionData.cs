@@ -33,5 +33,15 @@ namespace MemorizationAssistance.Models
         [DisplayName("解答")]
         [Required]
         public string Answer { get; set; }
+
+        /// <summary>
+        /// 問題集ID
+        /// </summary>
+        public int BookId { get; set; }
+
+        /// <summary>
+        /// 問題集
+        /// </summary>
+        public Book Book { get; set; }
     }
 }

@@ -1,13 +1,12 @@
 ﻿@model MemorizationAssistance.Models.Book
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "問題集詳細";
 }
 
-<h2>Details</h2>
+<h2>@ViewBag.Title</h2>
 
 <div>
-    <h4>Book</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -18,9 +17,27 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionDatas)
+        </dt>
+
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.QuestionDatas.FirstOrDefault().Question)</th>
+                    <th>@Html.DisplayNameFor(model => model.QuestionDatas.FirstOrDefault().Answer)</th>
+                </tr>
+                @foreach (var item in Model.QuestionDatas)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Question)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Answer)</td>
+                    </tr>
+                }
+            </table>
+        </dd>
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("管理に戻る", "Index")
 </p>

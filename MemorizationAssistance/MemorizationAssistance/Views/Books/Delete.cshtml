@@ -1,14 +1,13 @@
 ﻿@model MemorizationAssistance.Models.Book
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "問題集削除";
 }
 
-<h2>Delete</h2>
+<h2>@ViewBag.Title</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>この問題集を削除してよろしいですか？</h3>
 <div>
-    <h4>Book</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -19,14 +18,33 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionDatas)
+        </dt>
+
+        <dd>
+            <table class="table">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.QuestionDatas.FirstOrDefault().Question)</th>
+                    <th>@Html.DisplayNameFor(model => model.QuestionDatas.FirstOrDefault().Answer)</th>
+                </tr>
+                @foreach (var item in Model.QuestionDatas)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Question)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Answer)</td>
+                    </tr>
+                }
+            </table>
+        </dd>
     </dl>
 
     @using (Html.BeginForm()) {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="削除" class="btn btn-default" /> |
+            @Html.ActionLink("管理に戻る", "Index")
         </div>
     }
 </div>
