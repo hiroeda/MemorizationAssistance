@@ -1,0 +1,55 @@
+﻿@model MemorizationAssistance.Models.QuestionData
+@using MemorizationAssistance.Models
+
+@{
+    ViewBag.Title = "暗記対策";
+    var testResult = Session[MemorizationAssistance.Common.Constants.TEST_RESULT] as TrainingResultViewModel;
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { @autocomplete = "off" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.Order)
+    @Html.HiddenFor(model => model.Question)
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            @Html.DisplayFor(model => model.QuestionForTraining, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+        <div class="panel-body">
+            @Html.TextBox("Answer", "", new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Answer, "", new { @class = "text-danger" })
+        </div>
+        <div class="panel-footer">
+            <input type="submit" value="確認！" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+<table class="table table-bordered">
+    @Html.LabelFor(modelItem => testResult.TrainingResultItems.FirstOrDefault().CorrectRate, htmlAttributes: new { @class = "control-label col-md-2" })
+    @foreach (var item in testResult.TrainingResultItems)
+    {
+        <tr>
+            <td>
+                @item.ToString()
+            </td>
+        </tr>
+    }
+</table>
+<div>
+    @Html.ActionLink("ホームに戻る", "Index", "Home")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script>
+$(function () {
+    $("#Answer").focus();
+});
+</script>    
+}

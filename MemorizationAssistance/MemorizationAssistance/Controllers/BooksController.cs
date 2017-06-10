@@ -10,17 +10,27 @@ using MemorizationAssistance.Models;
 
 namespace MemorizationAssistance.Controllers
 {
+    /// <summary>
+    /// 問題集管理コントローラ
+    /// </summary>
     public class BooksController : Controller
     {
         private MemorizationAssistanceContext db = new MemorizationAssistanceContext();
 
-        // GET: Books
+        /// <summary>
+        /// 一覧画面
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View(db.Books.ToList());
         }
 
-        // GET: Books/Details/5
+        /// <summary>
+        /// 詳細画面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -35,15 +45,20 @@ namespace MemorizationAssistance.Controllers
             return View(book);
         }
 
-        // GET: Books/Create
+        /// <summary>
+        /// 追加画面(初回表示)
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Books/Create
-        // 過多ポスティング攻撃を防止するには、バインド先とする特定のプロパティを有効にしてください。
-        // 詳細については、https://go.microsoft.com/fwlink/?LinkId=317598 を参照してください。
+        /// <summary>
+        /// 追加画面(処理実施)
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,QuestionDataCsv")] BookEditViewModel book)
@@ -61,7 +76,11 @@ namespace MemorizationAssistance.Controllers
             return View(book);
         }
 
-        // GET: Books/Edit/5
+        /// <summary>
+        /// 編集画面(初回表示)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -76,9 +95,11 @@ namespace MemorizationAssistance.Controllers
             return View(book.ToEditViewModel());
         }
 
-        // POST: Books/Edit/5
-        // 過多ポスティング攻撃を防止するには、バインド先とする特定のプロパティを有効にしてください。
-        // 詳細については、https://go.microsoft.com/fwlink/?LinkId=317598 を参照してください。
+        /// <summary>
+        /// 編集画面(処理実施)
+        /// </summary>
+        /// <param name="book"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,QuestionDataCsv")] BookEditViewModel book)
@@ -109,7 +130,11 @@ namespace MemorizationAssistance.Controllers
             return View(book);
         }
 
-        // GET: Books/Delete/5
+        /// <summary>
+        /// 削除画面(初回表示)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -124,7 +149,11 @@ namespace MemorizationAssistance.Controllers
             return View(book);
         }
 
-        // POST: Books/Delete/5
+        /// <summary>
+        /// 削除画面(処理実施)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

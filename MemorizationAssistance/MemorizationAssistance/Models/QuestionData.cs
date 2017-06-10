@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -26,6 +27,19 @@ namespace MemorizationAssistance.Models
         [DisplayName("問題文")]
         [Required]
         public string Question { get; set; }
+
+        /// <summary>
+        /// 問題文(練習用)
+        /// </summary>
+        [DisplayName("問題文")]
+        [NotMapped]
+        public string QuestionForTraining
+        {
+            get
+            {
+                return string.Format("問題{0}) {1}", Order, Question);
+            }
+        }
 
         /// <summary>
         /// 解答
