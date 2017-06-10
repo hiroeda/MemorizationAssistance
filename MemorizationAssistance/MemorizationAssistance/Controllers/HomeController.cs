@@ -8,7 +8,7 @@ using System.Web.Mvc;
 namespace MemorizationAssistance.Controllers
 {
     /// <summary>
-    /// ホーム画面コントローラ
+    /// 問題集一覧画面コントローラ
     /// </summary>
     public class HomeController : Controller
     {

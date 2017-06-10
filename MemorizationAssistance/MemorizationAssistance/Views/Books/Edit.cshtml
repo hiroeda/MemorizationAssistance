@@ -28,6 +28,11 @@
             <div class="col-md-10">
                 @Html.TextAreaFor(model => model.QuestionDataCsv, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.QuestionDataCsv, "", new { @class = "text-danger" })
+                <p class="help-block">
+                    @Html.LabelFor(model => model.QuestionDataCsv)
+                    には下記の情報を持つCSVを記入してください。<br />
+                    ＜問題文＞,＜解答＞
+                </p>
             </div>
         </div>
 

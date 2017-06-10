@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Data.Entity;
+using MemorizationAssistance.Extensions;
 
 namespace MemorizationAssistance.Controllers
 {
@@ -40,8 +41,9 @@ namespace MemorizationAssistance.Controllers
             {
                 // 解答中の問題の指定がない場合は問題集を開いたばかりなので、
                 // 解答結果をクリアする。
-                Session[Constants.TEST_RESULT] = new TrainingResultViewModel(book);
+                Session[Constants.SESSION_TEST_RESULT] = new TrainingResultViewModel(book);
                 currentQuestionNumber = 1;
+                TempData.Notice("入力してください。");
             }
             var questionData = db.QuestionDatas
                 .Where(q => q.BookId == bookId)
@@ -52,7 +54,7 @@ namespace MemorizationAssistance.Controllers
                 return HttpNotFound();
             }
 
-            var testResult = Session[Constants.TEST_RESULT] as TrainingResultViewModel;
+            var testResult = Session[Constants.SESSION_TEST_RESULT] as TrainingResultViewModel;
             testResult.CurrentAnswerStatus = TrainingResultViewModel.AnswerStatus.Unanswered;
 
             return View(questionData);
@@ -68,7 +70,7 @@ namespace MemorizationAssistance.Controllers
         public ActionResult Index(QuestionData questionData)
         {
             // セッションから解答状況を取り出し
-            var testResult = Session[Constants.TEST_RESULT] as TrainingResultViewModel;
+            var testResult = Session[Constants.SESSION_TEST_RESULT] as TrainingResultViewModel;
             if (testResult == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -86,6 +88,7 @@ namespace MemorizationAssistance.Controllers
                     {
                         // 正解をカウント
                         testResult.AddCorrectCount(questionData.Id);
+                        TempData.Notice("正解! 入力してください。");
                         // 次の問題に移行
                         return RedirectToAction("Index", new {
                             bookId = testResult.BookId,
@@ -96,12 +99,14 @@ namespace MemorizationAssistance.Controllers
                     {
                         // 不正解をカウント
                         testResult.AddIncorrectCount(questionData.Id);
+                        TempData.Alert("残念...答えは" + correctAnswer.Answer);
                     }
                     break;
                 case TrainingResultViewModel.AnswerStatus.Answered:
                     // すでに解答済みの場合
                     if (correctAnswer.Answer == questionData.Answer)
                     {
+                        TempData.Notice("入力してください。");
                         // 次の問題に移行
                         return RedirectToAction("Index", new
                         {
@@ -112,6 +117,7 @@ namespace MemorizationAssistance.Controllers
                     else
                     {
                         // まだ間違っていることを通知
+                        TempData.Alert("正しい文章を入力してください:" + correctAnswer.Answer);
                     }
                     break;
             }

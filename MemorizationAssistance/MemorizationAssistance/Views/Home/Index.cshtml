@@ -1,27 +1,29 @@
 ﻿@model IEnumerable<MemorizationAssistance.Models.Book>
 
 @{
-    ViewBag.Title = "ホーム";
+    ViewBag.Title = "問題集一覧";
 }
+
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        はじめに
+    </div>
+    <div class="panel-body">
+        <p>このシステムは、和訳や英訳の試験勉強の補助を目的として作成した暗記システムです。</p>
+        <p>ノートに大量に同じ単語を書いて暗記する場合と同様の効果が得られます。</p>
+        <p>ノートとシャーペンの芯を節約できる画期的なシステムです。</p>
+    </div>
+</div>
 
 <h2>@ViewBag.Title</h2>
 
 <table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th></th>
-    </tr>
-
     @foreach (var item in Model)
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.ActionLink("問題へ", "Index", "Training", new { bookId = item.Id }, new { })
+                @Html.ActionLink(item.Name, "Index", "Training", new { bookId = item.Id }, new { })
             </td>
         </tr>
     }

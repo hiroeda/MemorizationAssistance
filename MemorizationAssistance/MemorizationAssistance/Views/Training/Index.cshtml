@@ -3,11 +3,10 @@
 
 @{
     ViewBag.Title = "暗記対策";
-    var testResult = Session[MemorizationAssistance.Common.Constants.TEST_RESULT] as TrainingResultViewModel;
+    var testResult = Session[MemorizationAssistance.Common.Constants.SESSION_TEST_RESULT] as TrainingResultViewModel;
 }
 
 <h2>@ViewBag.Title</h2>
-
 
 @using (Html.BeginForm(null, null, FormMethod.Post, new { @autocomplete = "off" }))
 {
@@ -42,7 +41,7 @@
     }
 </table>
 <div>
-    @Html.ActionLink("ホームに戻る", "Index", "Home")
+    @Html.ActionLink("問題集一覧に戻る", "Index", "Home")
 </div>
 
 @section Scripts {
