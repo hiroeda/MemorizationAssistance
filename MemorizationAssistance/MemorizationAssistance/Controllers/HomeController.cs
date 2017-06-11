@@ -1,8 +1,4 @@
-﻿using MemorizationAssistance.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
 using System.Web.Mvc;
 
 namespace MemorizationAssistance.Controllers
@@ -10,10 +6,8 @@ namespace MemorizationAssistance.Controllers
     /// <summary>
     /// 問題集一覧画面コントローラ
     /// </summary>
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private MemorizationAssistanceContext db = new MemorizationAssistanceContext();
-
         /// <summary>
         /// 一覧画面
         /// </summary>
@@ -21,15 +15,6 @@ namespace MemorizationAssistance.Controllers
         public ActionResult Index()
         {
             return View(db.Books.ToList());
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

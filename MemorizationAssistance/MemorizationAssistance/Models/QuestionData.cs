@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using CsvHelper.Configuration;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace MemorizationAssistance.Models
 {
@@ -58,4 +55,18 @@ namespace MemorizationAssistance.Models
         /// </summary>
         public Book Book { get; set; }
     }
+
+    /// <summary>
+    /// CSVデータとQuestionDataオブジェクトとのマッピング
+    /// </summary>
+    class QuestionDataCsvMap : CsvClassMap<QuestionData>
+    {
+        public QuestionDataCsvMap()
+        {
+            Map(m => m.Question).Index(0);
+            Map(m => m.Answer).Index(1);
+            Map(m => m.Order).ConvertUsing(r => r.Row);
+        }
+    }
+
 }

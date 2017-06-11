@@ -1,23 +1,17 @@
 ﻿using MemorizationAssistance.Common;
+using MemorizationAssistance.Extensions;
 using MemorizationAssistance.Models;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using System.Data.Entity;
-using MemorizationAssistance.Extensions;
 
 namespace MemorizationAssistance.Controllers
 {
     /// <summary>
     /// 暗記対策コントローラ
     /// </summary>
-    public class TrainingController : Controller
+    public class TrainingController : BaseController
     {
-        private MemorizationAssistanceContext db = new MemorizationAssistanceContext();
-
         /// <summary>
         /// 出題画面。Homeから問題集ID指定で呼び出される。
         /// </summary>
@@ -122,15 +116,6 @@ namespace MemorizationAssistance.Controllers
                     break;
             }
             return View(questionData);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

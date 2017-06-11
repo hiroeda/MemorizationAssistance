@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace MemorizationAssistance.Common
+﻿namespace MemorizationAssistance.Common
 {
+    /// <summary>
+    /// 定数保持クラス
+    /// </summary>
     public static class Constants
     {
         #region セッション

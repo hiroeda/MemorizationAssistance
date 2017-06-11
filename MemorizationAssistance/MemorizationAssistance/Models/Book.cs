@@ -1,9 +1,9 @@
-﻿using System;
+﻿using CsvHelper;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
-using System.Web;
 
 namespace MemorizationAssistance.Models
 {
@@ -36,19 +36,17 @@ namespace MemorizationAssistance.Models
         {
             if (questionDataCsv == null) return;
 
-            // ※ エラー処理省略
-            this.QuestionDatas = questionDataCsv
-                .Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries)
-                .Select((l, index) => {
-                    var items = l.Split(',');
-                    return new QuestionData()
-                    {
-                        Order = index + 1,
-                        Question = items[0],
-                        Answer = items[1]
-                    };
-                })
-                .ToList();
+            using (var stringReader = new StringReader(questionDataCsv))
+            using (var csvParser = new CsvParser(stringReader))
+            {
+                csvParser.Configuration.HasHeaderRecord = false;
+                csvParser.Configuration.RegisterClassMap<QuestionDataCsvMap>();
+
+                using (var csvReader = new CsvReader(csvParser))
+                {
+                    this.QuestionDatas = csvReader.GetRecords<QuestionData>().ToList();
+                }
+            }
         }
 
         /// <summary>

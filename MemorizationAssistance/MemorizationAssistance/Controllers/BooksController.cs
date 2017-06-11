@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using CsvHelper;
+using MemorizationAssistance.Extensions;
+using MemorizationAssistance.Models;
+using System;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using MemorizationAssistance.Models;
 
 namespace MemorizationAssistance.Controllers
 {
     /// <summary>
     /// 問題集管理コントローラ
     /// </summary>
-    public class BooksController : Controller
+    public class BooksController : BaseController
     {
-        private MemorizationAssistanceContext db = new MemorizationAssistanceContext();
-
         /// <summary>
         /// 一覧画面
         /// </summary>
@@ -65,12 +63,21 @@ namespace MemorizationAssistance.Controllers
         {
             if (ModelState.IsValid)
             {
-                var model = new Book();
-                UpdateModel(model);
-                model.SetQuestionDatas(book.QuestionDataCsv);
-                db.Books.Add(model);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                try
+                {
+                    var model = new Book();
+                    UpdateModel(model);
+                    model.SetQuestionDatas(book.QuestionDataCsv);
+                    db.Books.Add(model);
+                    db.SaveChanges();
+
+                    TempData.Notice("追加しました。");
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex) when (ex is CsvMissingFieldException || ex is DbEntityValidationException)
+                {
+                    TempData.Alert("登録できませんでした。CSVデータが正しいか確認してください。");
+                }
             }
 
             return View(book);
@@ -106,25 +113,34 @@ namespace MemorizationAssistance.Controllers
         {
             if (ModelState.IsValid)
             {
-                using (var tx = db.Database.BeginTransaction())
+                try
                 {
-                    var model = db.Books.Find(book.Id);
-
-                    // 現状の問題文を削除
-                    for (int i = model.QuestionDatas.Count - 1; i >= 0; i--)
+                    using (var tx = db.Database.BeginTransaction())
                     {
-                        db.QuestionDatas.Remove(model.QuestionDatas[i]);
+                        var model = db.Books.Find(book.Id);
+
+                        // 現状の問題文を削除
+                        for (int i = model.QuestionDatas.Count - 1; i >= 0; i--)
+                        {
+                            db.QuestionDatas.Remove(model.QuestionDatas[i]);
+                        }
+                        db.SaveChanges();
+
+                        // 新しい設定でDB更新
+                        UpdateModel(model);
+                        model.SetQuestionDatas(book.QuestionDataCsv);
+                        db.Entry(model).State = EntityState.Modified;
+                        db.SaveChanges();
+
+                        tx.Commit();
+
+                        TempData.Notice("保存しました。");
+                        return RedirectToAction("Index");
                     }
-                    db.SaveChanges();
-
-                    // 新しい設定でDB更新
-                    UpdateModel(model);
-                    model.SetQuestionDatas(book.QuestionDataCsv);
-                    db.Entry(model).State = EntityState.Modified;
-                    db.SaveChanges();
-
-                    tx.Commit();
-                    return RedirectToAction("Index");
+                }
+                catch (Exception ex) when (ex is CsvMissingFieldException || ex is DbEntityValidationException)
+                {
+                    TempData.Alert("登録できませんでした。CSVデータが正しいか確認してください。");
                 }
             }
             return View(book);
@@ -161,16 +177,8 @@ namespace MemorizationAssistance.Controllers
             Book book = db.Books.Find(id);
             db.Books.Remove(book);
             db.SaveChanges();
+            TempData.Notice("削除しました。");
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
